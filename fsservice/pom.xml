@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <parent>
+		<groupId>com.soprasteria</groupId>
+		<artifactId>fsservice-parent</artifactId>
+		<version>${revision}</version>
+		<relativePath>../pom.xml</relativePath>
+    </parent>
+	
+	<artifactId>fsservice</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Filesystem Service API</name>
+	<description>The Filesystem Service API provides the grpc service definition including stubs</description>
+
+	<build>
+	    <extensions>
+		  <extension>
+			<groupId>kr.motd.maven</groupId>
+			<artifactId>os-maven-plugin</artifactId>
+			<version>1.6.0</version>
+		  </extension>
+		</extensions>
+		<plugins>
+			<plugin>
+				<groupId>org.xolstice.maven.plugins</groupId>
+				<artifactId>protobuf-maven-plugin</artifactId>
+				<version>0.6.1</version>
+				<executions>
+				  <execution>
+					<goals>
+					  <goal>compile</goal>
+					  <goal>compile-custom</goal>
+					</goals>
+				  </execution>
+				</executions>
+				<configuration>
+				  <protocArtifact>com.google.protobuf:protoc:3.5.1-1:exe:${os.detected.classifier}</protocArtifact>
+				  <pluginId>grpc-java</pluginId>
+				  <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.18.0:exe:${os.detected.classifier}</pluginArtifact>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<!--configuration> <archive> <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile> 
+					</archive> </configuration -->
+			</plugin>
+		</plugins>
+	</build>
+</project>
