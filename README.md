@@ -4,7 +4,7 @@ The Filesystem Service exposes access to the filesystem of the host executing th
 
 TODO
 
-1. Create go client to utilize fsservice
+1. ~~Create go client to utilize fsservice~~
 2. Extend fsservice with cat command
 3. Convince Thomas to install fsservice on his computer and cat all his files (hopefully finding holiday pictures to share on the intranet)
 4. Install onto minikube (kubernetes)
