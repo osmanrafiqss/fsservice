@@ -3,3 +3,7 @@ target/
 .settings/*
 .project
 .classpath
+bin/
+.vscode
+*.exe
+*.pb.go
