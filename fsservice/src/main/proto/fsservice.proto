@@ -6,6 +6,7 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 
 option java_package = "com.soprasteria.fsservice";
+option go_package = "api";
 
 service FsService {
   // list files in a directory
