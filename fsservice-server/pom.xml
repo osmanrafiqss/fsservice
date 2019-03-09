@@ -14,6 +14,10 @@
 
 	<name>Filesystem Service Server</name>
 	<description>The Filesystem Service Service resolves service requests against the local file system the server is running on</description>
+	
+	<properties>
+		<docker.push.registry>master-1.northeurope.cloudapp.azure.com:5000</docker.push.registry>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -71,10 +75,17 @@
 				<version>0.27.2</version>
 				<executions>
 					<execution>
-						<id>default</id>
+						<id>local-registry</id>
 						<phase>install</phase>
 						<goals>
 							<goal>build</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>remote-registry</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>push</goal>
 						</goals>
 					</execution>
 				</executions>

@@ -26,7 +26,15 @@ For running fsservice on another port use the following docker command:
 
 docker run -p <port>:<port> --e port=<port> --name fsservice soprasteria/fsservice:latest
 
+### Private Registry
 
+Publish the docker image to a private docker registry using maven:
+
+mvn clean deploy -Ddocker.username="username" .Ddocker.password="password"
+
+The above command attempts to publish the Docker image to the private registry hosted on Azure, however this may be overriden by providing the registry as a parameter:
+
+mvn clean deploy -Ddocker.push.registry="url" -Ddocker.username="username" .Ddocker.password="password"
 
 ### Docker
 
