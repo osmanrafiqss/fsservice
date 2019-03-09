@@ -5,10 +5,13 @@ The Filesystem Service exposes access to the filesystem of the host executing th
 TODO
 
 1. ~~Create go client to utilize fsservice~~
-2. Extend fsservice with cat command
-3. Convince Thomas to install fsservice on his computer and cat all his files (hopefully finding holiday pictures to share on the intranet)
-4. Install onto minikube (kubernetes)
-5. Look into envoy / istio for load balancing with services
+2. ~~Extend fsservice with cat command~~
+3. Extend fsservice with cp command that allows copying files from local to remote
+4. Add configuration file to fsclient to avoid typing in server url again and again
+5. Configure server logging to file
+6. Deploy to Docker Swarm with mounted volume
+7. Configure filebeat/elasticsearch on Docker Swarm to retrieve fsservice log file
+8. Convince Thomas to install fsservice on his computer and cat all his files (hopefully finding holiday pictures to share on the intranet)
 
 ### Getting Started
 
@@ -30,11 +33,11 @@ docker run -p <port>:<port> --e port=<port> --name fsservice soprasteria/fsservi
 
 Publish the docker image to a private docker registry using maven:
 
-mvn clean deploy -Ddocker.username="username" .Ddocker.password="password"
+mvn clean deploy -Ddocker.username="username" -Ddocker.password="password"
 
-The above command attempts to publish the Docker image to the private registry hosted on Azure, however this may be overriden by providing the registry as a parameter:
+The above command attempts to publish the Docker image to the private registry hosted on Azure, however this may be overridden by providing the registry as a parameter:
 
-mvn clean deploy -Ddocker.push.registry="url" -Ddocker.username="username" .Ddocker.password="password"
+mvn clean deploy -Ddocker.push.registry="url" -Ddocker.username="username" -Ddocker.password="password"
 
 ### Docker
 
