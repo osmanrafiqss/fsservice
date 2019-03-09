@@ -11,6 +11,9 @@ option go_package = "api";
 service FsService {
   // list files in a directory
   rpc List(ListFilesRequest) returns (stream File);
+  
+  // cat file content
+  rpc Cat(CatFileRequest) returns (stream FileContent);
 }
 
 message ListFilesRequest {
@@ -22,4 +25,12 @@ message File {
   int32 size = 2;
   google.protobuf.Timestamp last_access_time = 3;
   string file_name = 4;
+}
+
+message CatFileRequest {
+  string path_name = 1;
+}
+
+message FileContent {
+  bytes chunk = 1;
 }
