@@ -33,7 +33,7 @@ var catCmd = &cobra.Command{
 	The command takes two arguments, the server on which to access the filesystem service and the path to a file.
 
 	For example:
-	ls 127.0.0.1:8080 /test.txt`,
+	cat 127.0.0.1:8080 /test.txt`,
 	Args: cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		conn, connErr := grpc.Dial(args[0], grpc.WithInsecure())

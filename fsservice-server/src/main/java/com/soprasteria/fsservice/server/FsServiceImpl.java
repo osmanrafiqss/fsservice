@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -14,9 +16,11 @@ import java.util.logging.Logger;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import com.soprasteria.fsservice.FsServiceGrpc.FsServiceImplBase;
+import com.soprasteria.fsservice.Fsservice;
 import com.soprasteria.fsservice.Fsservice.CatFileRequest;
 import com.soprasteria.fsservice.Fsservice.File;
 import com.soprasteria.fsservice.Fsservice.FileContent;
+import com.soprasteria.fsservice.Fsservice.FileCopyStatus;
 import com.soprasteria.fsservice.Fsservice.ListFilesRequest;
 
 import io.grpc.Status;
@@ -96,27 +100,95 @@ public class FsServiceImpl extends FsServiceImplBase {
 		}
 	}
 	
+	@Override
+	public StreamObserver<FileContent> cp(final StreamObserver<FileCopyStatus> responseObserver) {
+		logger.info("copy command invoked - instantiating stream observer to receive file content");
+		
+		return new StreamObserver<Fsservice.FileContent>() {
+			private final OpenOption[] writeOptions = {StandardOpenOption.CREATE, StandardOpenOption.APPEND};
+			private volatile Path filePath = null;
+
+			@Override
+			public void onNext(Fsservice.FileContent value) {
+				try {
+					if (filePath == null) {
+						Path path = getPath(value.getPathName());
+						if (Files.exists(path)) {
+							throw new IllegalArgumentException("not possible to overwrite existing file");
+						}
+
+						filePath = path;
+					}
+
+					Files.write(filePath, value.getChunk().toByteArray(), writeOptions);
+
+				} catch (Exception e) {
+					logger.warning("cp command for path: " + value.getPathName() + " failed with: " + e.getMessage());
+					responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asException());
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				logger.warning("cp command failed for path: " + filePath + " with: "  + t.getMessage());
+				
+				if (filePath != null) {
+					try {
+						Files.deleteIfExists(filePath);
+
+					} catch (IOException e) {
+						logger.severe("cp command unable to delete failed transfer for path: " + filePath + " failed with: " + e.getMessage());
+					}
+				}
+			}
+
+			@Override
+			public void onCompleted() {
+				logger.info("cp command completed for path: " + filePath);
+			}
+		};
+	}
+	
 	/**
 	 * Resolves the specified path to an existing filesystem structure
 	 * @param pathName the path to resolve
 	 * @return the resolved path  
 	 * @throws NonResolveablePathException thrown if the specified path could not be resolved to a filesystem structure
 	 */
-	private Path resolve(String pathName) throws NonResolveablePathException {
+	private static Path resolve(String pathName) throws NonResolveablePathException {
 		Path resolved = null;
 
 		try {
-			if (pathName == null || pathName.trim().isEmpty()) {
-				throw new NonResolveablePathException("no valid path specified");
-			}
+			resolved = getPath(pathName);
 
-			resolved = Paths.get(pathName);
 			if (!Files.exists(resolved)) {
-				throw new NonResolveablePathException("not able to resolve path to filesystem structure: ");
+				throw new NonResolveablePathException("not able to resolve path to filesystem structure: " + resolved.toAbsolutePath().toString());
 			}
-		} catch (Exception e) {
+		} catch (SecurityException | InvalidPathException e) {
 			logger.warning("Unable to access specified path: " + pathName + ", error: " + e.getMessage());
 			throw new NonResolveablePathException("unable to resolve path: " + pathName);
+		}
+
+		return resolved;
+	}
+	
+	/**
+	 * Retrieves the path for the specified name if the path is valid
+	 * @param pathName the path name
+	 * @return the path
+	 * @throws NonResolveablePathException thrown if it was not possible to retrieve a path for the specified path name
+	 */
+	private static Path getPath(String pathName) throws NonResolveablePathException {
+		if (pathName == null || pathName.trim().isEmpty()) {
+			throw new NonResolveablePathException("no valid path specified");
+		}
+
+		Path resolved = null;
+		try {
+			resolved = Paths.get(pathName);
+		} catch (InvalidPathException e) {
+			logger.warning("Unable to access specified path: " + pathName + ", error: " + e.getMessage());
+			throw new NonResolveablePathException("Invalid path specified");
 		}
 
 		return resolved;

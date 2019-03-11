@@ -6,7 +6,7 @@ TODO
 
 1. ~~Create go client to utilize fsservice~~
 2. ~~Extend fsservice with cat command~~
-3. Extend fsservice with cp command that allows copying files from local to remote
+3. ~~Extend fsservice with cp command that allows copying files from local to remote~~
 4. Add configuration file to fsclient to avoid typing in server url again and again
 5. Configure server logging to file
 6. Deploy to Docker Swarm with mounted volume

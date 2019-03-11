@@ -14,6 +14,9 @@ service FsService {
   
   // cat file content
   rpc Cat(CatFileRequest) returns (stream FileContent);
+  
+  // copy file content
+  rpc Cp(stream FileContent) returns (FileCopyStatus);
 }
 
 message ListFilesRequest {
@@ -33,4 +36,8 @@ message CatFileRequest {
 
 message FileContent {
   bytes chunk = 1;
+  string path_name = 2;
+}
+
+message FileCopyStatus {
 }
