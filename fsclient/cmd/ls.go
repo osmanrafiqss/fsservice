@@ -27,16 +27,16 @@ import (
 
 // lsCmd represents the ls command
 var lsCmd = &cobra.Command{
-	Use:   "ls [server] [path]",
+	Use:   "ls --service <service addr>  [path]",
 	Short: "Lists the content of a filesystem service directory",
 	Long: `Performs the ls command against a filesystem service, listing its directory contents.
-	The command takes two arguments, the server on which to access the filesystem service and the path to list.
+	The command takes a single argument in the form of the absolute path to list.
 
 	For example:
-	ls 127.0.0.1:8080 /`,
-	Args: cobra.ExactArgs(2),
+	ls -s 127.0.0.1:8080 /`,
+	Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		conn, connErr := grpc.Dial(args[0], grpc.WithInsecure())
+		conn, connErr := grpc.Dial(serviceAddr, grpc.WithInsecure())
 		if connErr != nil {
 			return fmt.Errorf("could not connect to filesystem service: %v", connErr)
 		}
@@ -46,7 +46,7 @@ var lsCmd = &cobra.Command{
 		client := api.NewFsServiceClient(conn)
 
 		// list root
-		filesRequest := api.ListFilesRequest{PathName: args[1]}
+		filesRequest := api.ListFilesRequest{PathName: args[0]}
 		lsErr := printLs(client, filesRequest)
 		if lsErr != nil {
 			return fmt.Errorf("could not perform list against filesystem service: %v", lsErr)

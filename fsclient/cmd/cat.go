@@ -27,16 +27,16 @@ import (
 
 // catCmd represents the cat command
 var catCmd = &cobra.Command{
-	Use:   "cat [server] [path]",
+	Use:   "cat --service <service addr> [path]",
 	Short: "Print a file on the standard output",
 	Long: `Performs the cat command against a filesystem service, printing the file content.
-	The command takes two arguments, the server on which to access the filesystem service and the path to a file.
+	The command takes a single argument in the form of the absolute path to a file.
 
 	For example:
-	cat 127.0.0.1:8080 /test.txt`,
-	Args: cobra.ExactArgs(2),
+	cat -s 127.0.0.1:8080 /test.txt`,
+	Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		conn, connErr := grpc.Dial(args[0], grpc.WithInsecure())
+		conn, connErr := grpc.Dial(serviceAddr, grpc.WithInsecure())
 		if connErr != nil {
 			return fmt.Errorf("could not connect to filesystem service: %v", connErr)
 		}
@@ -46,7 +46,7 @@ var catCmd = &cobra.Command{
 		client := api.NewFsServiceClient(conn)
 
 		// cat file
-		catFileRequest := api.CatFileRequest{PathName: args[1]}
+		catFileRequest := api.CatFileRequest{PathName: args[0]}
 		catErr := printCat(client, catFileRequest)
 		if catErr != nil {
 			return fmt.Errorf("could not perform cat against filesystem service: %v", catErr)

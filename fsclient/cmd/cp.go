@@ -28,17 +28,16 @@ import (
 
 // cpCmd represents the cp command
 var cpCmd = &cobra.Command{
-	Use:   "cp [server] [local path] [path]",
+	Use:   "cp --service <service addr> [local path] [path]",
 	Short: "Copies a local file to the remote filesystem service",
 	Long: `Copies a local file to the remote filesystem service.
-	The command takes three arguments, the [server] on which to access the filesystem service, 
-	the [local path] to the local file to copy and the remote [path] to copy the file to.
+	The command takes two arguments, the [local path] to the local file to copy and the remote [path] to copy the file to.
 
 	For example:
-	cp 127.0.0.1:8080 /test.txt /usr/test.txt`,
-	Args: cobra.ExactArgs(3),
+	cp -s 127.0.0.1:8080 /test.txt /usr/test.txt`,
+	Args: cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		conn, connErr := grpc.Dial(args[0], grpc.WithInsecure())
+		conn, connErr := grpc.Dial(serviceAddr, grpc.WithInsecure())
 		if connErr != nil {
 			return fmt.Errorf("could not connect to filesystem service: %v", connErr)
 		}
@@ -48,7 +47,7 @@ var cpCmd = &cobra.Command{
 		client := api.NewFsServiceClient(conn)
 
 		// copy file
-		cpErr := copy(client, args[1], args[2])
+		cpErr := copy(client, args[0], args[1])
 		if cpErr != nil {
 			return fmt.Errorf("could not copy file: %v", cpErr)
 		}
