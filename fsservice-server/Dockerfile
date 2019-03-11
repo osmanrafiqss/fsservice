@@ -9,5 +9,11 @@ ADD target/lib /usr/share/fsservice/lib
 # Add the service jar
 ADD target/${project.build.finalName}.jar /usr/share/fsservice/fsservice.jar
 
+# Create application log directory
+RUN mkdir /var/log/fsservice
+
+# Add the logging properties
+ADD logging.properties /usr/share/fsservice/logging.properties
+
 # cmd to execute
-CMD /usr/bin/java -jar /usr/share/fsservice/fsservice.jar -p $port
+CMD /usr/bin/java -Djava.util.logging.config.file=/usr/share/fsservice/logging.properties -jar /usr/share/fsservice/fsservice.jar -p $port

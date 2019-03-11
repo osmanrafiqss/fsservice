@@ -8,7 +8,7 @@ TODO
 2. ~~Extend fsservice with cat command~~
 3. ~~Extend fsservice with cp command that allows copying files from local to remote~~
 4. ~~Add configuration file to fsclient to avoid typing in server url again and again~~
-5. Configure server logging to file
+5. ~~Configure server logging to file~~
 6. Deploy to Docker Swarm with mounted volume
 7. Configure filebeat/elasticsearch on Docker Swarm to retrieve fsservice log file
 8. Convince Thomas to install fsservice on his computer and cat all his files (hopefully finding holiday pictures to share on the intranet)
