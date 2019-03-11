@@ -145,6 +145,8 @@ public class FsServiceImpl extends FsServiceImplBase {
 			@Override
 			public void onCompleted() {
 				logger.info("cp command completed for path: " + filePath);
+				responseObserver.onNext(FileCopyStatus.newBuilder().build());
+				responseObserver.onCompleted();
 			}
 		};
 	}
