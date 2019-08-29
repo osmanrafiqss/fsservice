@@ -4,10 +4,10 @@ FROM openjdk:8-jre-slim
 ENV port 8080
 
 # Add Maven dependencies
-ADD target/lib /usr/share/fsservice/lib
+ADD lib /usr/share/fsservice/lib
 
 # Add the service jar
-ADD target/${project.build.finalName}.jar /usr/share/fsservice/fsservice.jar
+ADD ${project.build.finalName}.jar /usr/share/fsservice/fsservice.jar
 
 # Create application log directory
 RUN mkdir /var/log/fsservice

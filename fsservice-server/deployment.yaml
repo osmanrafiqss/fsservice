@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fsservice-server-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: fsservice-server
+    spec:
+      containers:
+      - name: fsservice-server
+        image: soprasteria/fsservice:0.0.1-SNAPSHOT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fsservice-service
+  labels:
+    app: fsservice-service
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+    - port: 80
+      tagetPort: 8080
+      name: http
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: fsservice-server

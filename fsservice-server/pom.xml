@@ -34,6 +34,24 @@
 	
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+				  <resources>
+					<resource>
+						<directory>.</directory>
+						<includes>
+						  <include>Dockerfile</include>
+						  <include>deployment.yaml</include>
+						</includes>
+						<filtering>true</filtering>
+					</resource>
+				  </resources>
+				  <outputDirectory>${project.build.directory}</outputDirectory>
+				</configuration>
+			</plugin>
 		    <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -94,7 +112,7 @@
 						<image>
 							<name>soprasteria/fsservice</name>
 							<build>
-								<dockerFileDir>${project.basedir}</dockerFileDir>
+								<dockerFileDir>${project.basedir}/target</dockerFileDir>
 								<tags>
 									<tag>latest</tag>
 									<tag>${project.version}</tag>
