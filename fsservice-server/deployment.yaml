@@ -27,7 +27,7 @@ spec:
   ports:
     # the port that this service should serve on
     - port: 80
-      tagetPort: 8080
+      targetPort: 8080
       name: http
   # label keys and values that must match in order to receive traffic for this service
   selector:
