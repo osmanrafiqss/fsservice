@@ -17,6 +17,7 @@
 	
 	<properties>
 		<docker.push.registry>master-1.northeurope.cloudapp.azure.com:5000</docker.push.registry>
+		<docker.build.dir>${project.build.directory}/dockerbuild</docker.build.dir>
 	</properties>
 
 	<dependencies>
@@ -50,13 +51,13 @@
 						<filtering>true</filtering>
 					</resource>
 				  </resources>
-				  <outputDirectory>${project.build.directory}</outputDirectory>
+				  <outputDirectory>${docker.build.dir}</outputDirectory>
 				</configuration>
 			</plugin>
 		    <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.2</version>
 				<configuration>
 				  <archive>
 					<manifest>
@@ -65,6 +66,7 @@
 					  <classpathPrefix>lib/</classpathPrefix>
 					</manifest>
 				  </archive>
+				  <outputDirectory>${docker.build.dir}</outputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -79,7 +81,7 @@
 					  <goal>copy-dependencies</goal>
 					</goals>
 					<configuration>
-					  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+					  <outputDirectory>${docker.build.dir}/lib</outputDirectory>
 					  <overWriteReleases>false</overWriteReleases>
 					  <overWriteSnapshots>false</overWriteSnapshots>
 					  <overWriteIfNewer>true</overWriteIfNewer>
@@ -91,7 +93,7 @@
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.27.2</version>
+				<version>0.31.0</version>
 				<executions>
 					<execution>
 						<id>local-registry</id>
@@ -113,7 +115,7 @@
 						<image>
 							<name>soprasteria/fsservice</name>
 							<build>
-								<dockerFileDir>${project.basedir}/target</dockerFileDir>
+								<contextDir>${docker.build.dir}</contextDir>
 								<tags>
 									<tag>latest</tag>
 									<tag>${project.version}</tag>
