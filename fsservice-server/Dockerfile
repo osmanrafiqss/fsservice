@@ -16,4 +16,4 @@ RUN mkdir /var/log/fsservice
 ADD logging.properties /usr/share/fsservice/logging.properties
 
 # cmd to execute
-CMD /usr/bin/java -Djava.util.logging.config.file=/usr/share/fsservice/logging.properties -jar /usr/share/fsservice/fsservice.jar -p $port
+CMD java -Djava.util.logging.config.file=/usr/share/fsservice/logging.properties -jar /usr/share/fsservice/fsservice.jar -p $port
