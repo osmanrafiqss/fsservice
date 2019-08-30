@@ -4,7 +4,9 @@ metadata:
   name: fsservice-server-deployment
 spec:
   replicas: 2
-  selector: fsservice-server
+  selector: 
+    matcLabels:
+      app: fsservice-server
   template:
     metadata:
       labels:
