@@ -32,3 +32,17 @@ spec:
   # label keys and values that must match in order to receive traffic for this service
   selector:
     app: fsservice-server
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fsservice-ingress
+spec:
+  rules:
+  - host: det-rigtige-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /fsservice
+        backend:
+          serviceName: fsservice-service
+          servicePort: 80
