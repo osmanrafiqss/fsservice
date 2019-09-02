@@ -44,6 +44,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    #ingress.bluemix.net/tcp-ports: "serviceName=fsservice-service ingressPort=443 servicePort=443"
 spec:
   tls:
   - hosts: 
@@ -53,7 +54,7 @@ spec:
   - host: det-rigtige-cluster.us-south.containers.appdomain.cloud
     http:
       paths:
-      - path: /fsservice
+      - path: /
         backend:
           serviceName: fsservice-service
           servicePort: 443
