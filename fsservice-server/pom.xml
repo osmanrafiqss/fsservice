@@ -111,7 +111,7 @@
 					<chartVersion>${project.version}</chartVersion>
 					<outputDirectory>${docker.build.dir}</outputDirectory>
 					<!-- This is the related section when using binary download -->
-					<helmDownloadUrl>https://get.helm.sh/helm-v2.14.3-windows-amd64.zip</helmDownloadUrl>
+					<helmDownloadUrl>https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz</helmDownloadUrl>
 					<helmHomeDirectory>${project.build.directory}/helm/home</helmHomeDirectory>
 			  </configuration>
 			</plugin>
