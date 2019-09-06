@@ -42,11 +42,12 @@
 				<configuration>
 				  <resources>
 					<resource>
-						<directory>.</directory>
+						<directory>src/main/resources</directory>
 						<includes>
 						  <include>Dockerfile</include>
 						  <include>deployment.yaml</include>
 						  <include>logging.properties</include>
+						  <include>helm/fsservice-server/**</include>
 						</includes>
 						<filtering>true</filtering>
 					</resource>
@@ -89,6 +90,30 @@
 					</configuration>
 				  </execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.kiwigrid</groupId>
+				<artifactId>helm-maven-plugin</artifactId>
+				<version>4.11</version>
+				<executions>
+					<execution>
+						<id>package-helm-chart</id>
+						<phase>package</phase>
+						<goals>
+							<goal>init</goal>
+							<goal>lint</goal>
+							<goal>package</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<chartDirectory>${docker.build.dir}/helm/fsservice-server</chartDirectory>
+					<chartVersion>${project.version}</chartVersion>
+					<outputDirectory>${docker.build.dir}</outputDirectory>
+					<!-- This is the related section when using binary download -->
+					<helmDownloadUrl>https://get.helm.sh/helm-v2.14.3-windows-amd64.zip</helmDownloadUrl>
+					<helmHomeDirectory>${project.build.directory}/helm/home</helmHomeDirectory>
+			  </configuration>
 			</plugin>
 			<plugin>
 				<groupId>io.fabric8</groupId>

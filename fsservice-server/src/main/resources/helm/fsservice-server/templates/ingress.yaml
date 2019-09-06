@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fsservice-ingress
+  #annotate to configure the IBM ALB (which is a nginx) to pass-through SSL as required by HTTP2
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    #ingress.bluemix.net/tcp-ports: "serviceName=fsservice-service ingressPort=443 servicePort=443"
+spec:
+  tls:
+  - hosts: 
+    - det-rigtige-cluster.us-south.containers.appdomain.cloud
+    secretName: det-rigtige-cluster
+  rules:
+  - host: det-rigtige-cluster.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - backend:
+          serviceName: fsservice-service
+          servicePort: fsservice-grpc

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fsservice-service
+  labels:
+    app: fsservice-service
+  annotations:
+    cloud.google.com/app-protocols: '{"fsservice-grpc":"HTTP2"}'
+spec:
+  type: NodePort
+  ports:
+    # the port that this service should serve on
+    - port: 443
+      targetPort: 8080
+      name: fsservice-grpc
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: ${project.artifactId}
